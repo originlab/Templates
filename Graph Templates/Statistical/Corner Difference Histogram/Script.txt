@@ -1,0 +1,1 @@
+page.info.SYSTEM.plotting.ltafter$="run.section(plot, CornerDiffHistoAfterPlot)";

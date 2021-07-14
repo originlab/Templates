@@ -1,0 +1,7 @@
+page.info.system.plotting.LT$="w2xyz -r 2 format:=ycol ylabel:=param param:=L xcol:=1 oz:=<new name:=MatrixBubble>!(<new>,<new>,<new>);
+wcol(2)[L]$="";
+wcol(3)[L]$="";
+wcol(3)[C]$="";
+wks.col3.type = 1;
+plotxy (1,2:3) plot:=194 ogl:=<new template:=__TEMPLATE>;
+";

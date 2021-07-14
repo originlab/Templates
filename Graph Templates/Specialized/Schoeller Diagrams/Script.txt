@@ -1,0 +1,7 @@
+page.info.SYSTEM.plotting.ltafter$="range -w rw = 1;
+string strwks = rw.GetLayer()$;
+int n1 = %(strwks$)wks.c1;
+range rr1 = %(strwks$)$(n1);
+set rw -cn rr1;
+set rw -ksn rr1;
+Legend -r;";

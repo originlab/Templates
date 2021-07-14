@@ -1,0 +1,1 @@
+page.info.system.plotting.LTAfter$="get %%C -hbb lower;get %%C -hbe upper;set %%C -hbs (upper-lower)/100";
