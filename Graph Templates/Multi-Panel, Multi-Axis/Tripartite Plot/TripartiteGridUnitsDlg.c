@@ -25,9 +25,84 @@
 
 ////////////////////////////////////////////////////////////////////////////////////
 // Include your own header files here.
-#include "TripartiteGridUnitsDlg.h"
-#include "okThemeID.h" 
-#include "grobj_utils.h"
+#include <../Originlab/okThemeID.h>
+#include <../Originlab/grobj_utils.h>
+#include <..\Originlab\DialogEx.h>
+
+#define STR_TRIPAERTITE_GRID_UNIT_BUTTON					_L("Tripartite...")
+#define MAKEDWORD(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
+/**********************************************************************
+*                       TripartiteGridUnitsDlg                               *
+**********************************************************************/
+class TripartiteGridUnitsDlg : public ResizeDialog 
+{
+public:	
+	TripartiteGridUnitsDlg();
+	
+	~TripartiteGridUnitsDlg();
+	
+	int DoModalEx(HWND hWndParent = NULL)
+	{
+		InitMsgMap();
+		int nRet = DoModal(hWndParent);
+
+		return nRet;
+	}
+	
+protected :
+	EVENTS_BEGIN
+		ON_INIT(OnInitDialog) 
+		ON_SIZE(OnDlgResize)
+		ON_OK(OnOK)
+		ON_CANCEL(OnClose)
+		ON_DESTROY(OnDestroy);
+		ON_BN_CLICKED(IDC_APPLY, OnApply)
+		
+		ON_BN_CLICKED(IDC_TRIPARTITE_HELP_BUTTIN, OnClickHelpBTN)
+		
+		ON_EN_CHANGE(IDC_TRIPARTITE_NUMBER_OF_MINOR_GRIDS, OnEditChange)
+		ON_EN_CHANGE(IDC_TRIPARTITE_45_DEG_A_VALUE, OnEditChange)
+		ON_EN_CHANGE(IDC_TRIPARTITE_135_DEG_B_VALUE, OnEditChange)
+		ON_EN_CHANGE(IDC_TRIPARTITE_45_DEG_LABEL, OnEditChange)
+		ON_EN_CHANGE(IDC_TRIPARTITE_135_DEG_LABEL, OnEditChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_A, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_B, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_C, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_D, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_E, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_F, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_G, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_H, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_I, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_J, OnRadioChange)
+		ON_BN_CLICKED(IDC_TRIPARTITE_SELECT_UNITS_USER_DEFINED, OnRadioChange)
+	EVENTS_END
+	
+	BOOL OnInitDialog();
+	BOOL OnDlgResize(int nType, int cx, int cy);
+	BOOL OnOK();
+	BOOL OnClose();
+	BOOL OnDestroy();
+	BOOL OnApply(Control ctrl);
+	
+	BOOL OnClickHelpBTN(Control ctrl);
+	BOOL OnEditChange(Control ctrl);
+	BOOL OnRadioChange(Control ctrl);
+protected:
+	void UpdateABValueAndLable(int nRadioID = -1);
+	void SaveToStorage();
+	void InitFromStorage();
+	void UpdateApplyButtonEnable(BOOL bEnabel);
+	BOOL GetApplyButtonEnable();
+private:
+	Control m_editAValue;
+	Control m_editBValue;
+	Control m_editALabel;
+	Control m_editBLabel;
+	Control m_editMinorNumber;
+	GraphLayer m_gl;
+};
+
 ////////////////////////////////////////////////////////////////////////////////////
 // Start your functions here.
 #define STR_TRIPAERTITE_GRID_UNIT_STORAGE					"TripartiteGridUnits"
@@ -39,6 +114,7 @@
 #define STR_DEFAULT_B_LABEL		"g"
 
 #define AXIS_BENGIN_AND_AXIS_END 2
+
 
 DWORD dwSTYLE =  STYLE_RELATIVE | STYLE_NO_CLEANUP | STYLE_UNDO;
 
@@ -75,16 +151,13 @@ static void _update_reference_line_value(TreeNode& trOneRefLine, string strFormu
 	trOneRefLine.LabelPos.nVal = RefLabelPos_Left;
 	trOneRefLine.Line.Color.nVal = 18;
 	
-	if(!bMinor)
-	{
-		TreeNode trLabelText = tree_check_get_node( trOneRefLine.Labels.Label1, "Text", OTID_LABEL_TEXT );
-		if(trLabelText)
-			trLabelText.strVal = strLabel;
-		
-		TreeNode trLabelShow = tree_check_get_node( trOneRefLine.Labels.Label1, "Show", OTID_LABEL_SHOW );
-		if(trLabelShow)
-			trLabelShow.nVal = 1;
-	}
+	TreeNode trLabelText = tree_check_get_node( trOneRefLine.Labels.Label1, "Text", OTID_LABEL_TEXT );
+	if(trLabelText)
+		trLabelText.strVal = strLabel;
+	
+	TreeNode trLabelShow = tree_check_get_node( trOneRefLine.Labels.Label1, "Show", OTID_LABEL_SHOW );
+	if(trLabelShow)
+		trLabelShow.nVal = bMinor ? 0 : 1;
 
 }
 
@@ -100,7 +173,7 @@ static void _update_x_y_axis_begin_and_end_Value(GraphLayer& gl, TreeNode &trThe
 	trYRefLines.RefLines.RefLine2.Type.nVal = RefLineCtrl_Pos_End;
 }
 
-TripartiteGridUnitsDlg::TripartiteGridUnitsDlg() : ResizeDialog(IDD_TRIPARTITE_GRID_UNITS_DLG, "ODlg8")
+TripartiteGridUnitsDlg::TripartiteGridUnitsDlg() : ResizeDialog(IDD_TRIPARTITE_GRID_UNITS_DLG, "TripartiteDlg")
 {
 }
 
@@ -526,7 +599,14 @@ void CreateButtonInTripartiteGraph(GraphLayer& gl)
 	{
 		add_text(gl, goTextButton, 90, 5, STR_TRIPAERTITE_GRID_UNIT_BUTTON, 0, true, ATTACH_TO_PAGE);
 		goTextButton.SetName(STR_TRIPAERTITE_GRID_UNIT_BUTTON);
-		set_LT_script(goTextButton, "page.active = 1;run.LoadOC(Originlab\TripartiteGridUnitsDlg.c, 16);run -oc {OpenTripartiteGridUnitDLG();}", GRCT_MOUSEUP);
+		string strLT = "string path=%@Y;\
+						path.Delete(path.GetLength());\
+						int slash=path.ReverseFind('\');\
+						path$=path.Left(slash)$;\
+						page.active = 1;\
+						run.LoadOC(%(path$)Templates\TripartiteGridUnitsDlg.c, 16);\
+						run -oc {OpenTripartiteGridUnitDLG();}";
+		set_LT_script(goTextButton, strLT, GRCT_MOUSEUP);
 		set_textbutton_pos(gl, goTextButton, TRUE);
 	}
 }
