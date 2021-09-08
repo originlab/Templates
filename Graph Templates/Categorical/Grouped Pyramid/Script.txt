@@ -1,0 +1,7 @@
+page.info.system.plotting.LT$="
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+plotxy iy:=(1,3) plot:=203 legend:= 0 ogl:=[<new template:=__TEMPLATE>];
+plotxy iy:=[bkname$]shname$!(1,3) plot:=201 rescale:=0 legend:=0 ogl:=1;
+plotxy iy:=[bkname$]shname$!(1,4)  plot:=203 legend:=0 ogl:=2;
+";
