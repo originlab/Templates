@@ -1,0 +1,2 @@
+page.info.system.plotting.LT$="twoDBinning -r 2 rd:=<optional> om:=<new>;
+worksheet -p 242 __TEMPLATE;";
