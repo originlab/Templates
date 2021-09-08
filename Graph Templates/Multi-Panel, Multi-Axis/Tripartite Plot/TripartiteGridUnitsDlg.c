@@ -22,13 +22,12 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 //#pragma labtalk(0) // to disable OC functions for LT calling.
-
+#include "resource.h"
 ////////////////////////////////////////////////////////////////////////////////////
 // Include your own header files here.
 #include <../Originlab/okThemeID.h>
 #include <../Originlab/grobj_utils.h>
 #include <..\Originlab\DialogEx.h>
-
 #define STR_TRIPAERTITE_GRID_UNIT_BUTTON					_L("Tripartite...")
 #define MAKEDWORD(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
 /**********************************************************************
@@ -615,7 +614,7 @@ void CreateButtonInTripartiteGraph(GraphLayer& gl)
 BOOL OpenTripartiteGridUnitDLG()
 {
 	TripartiteGridUnitsDlg TGUDlg();
-
+	
 	HWND hWnd = GetWindow(OGW_MAIN);
 	if(IDOK == TGUDlg.DoModalEx(hWnd))
 	{
