@@ -1,0 +1,8 @@
+page.info.system.plotting.LT$="
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+plotxy iy:=(1,5:end) plot:=200 legend:=0 ogl:=[<new template:=__TEMPLATE>];
+plotxy iy:=[bkname$]shname$!(1,4) plot:=200 legend:=0 color:=color(81,81,81) ogl:=1;
+plotxy iy:=[bkname$]shname$!(1,2)  plot:=200 legend:=0 color:=1 ogl:=1;
+plotxy iy:=[bkname$]shname$!(1,3)  plot:=200 legend:=0 ogl:=1;
+";

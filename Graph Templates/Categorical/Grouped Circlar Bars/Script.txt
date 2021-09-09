@@ -1,0 +1,11 @@
+page.info.system.plotting.LT$="
+colcopy -r 2 sort:=asc ref:=!2 orng:=PlotData>!<new>;
+plotxy (1, 3) plot:=192 ogl:=<new template:=__TEMPLATE>;
+range -wx rWx = 1;
+range -wy rWy = 1;
+plotxy (rWx, rWy) plot:=201 ogl:=1;
+run.LoadOC(Originlab\page_utils.c, 16);
+run -oc OnAfterCreateRadialBarPlot();
+Legend -r;
+";
+
