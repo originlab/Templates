@@ -1,0 +1,14 @@
+%A=$;
+page.info.system.plotting.LT$="
+int nBegin = wks.c1;
+int nEnd = wks.c2;
+if(wks.col%A(nbegin).type==4)
+	nBegin = wks.c1 + 1;
+range rr = (%A(nbegin): %A(nend));
+range rrxy = (1, %A(nbegin):%A(nend));
+colstats -r 2 irng:=rr col:=InsetData>!1 Mean:=<optional> SD:=<optional> Median:=<optional> N:=<optional> max:=<new>;
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+plotxy rrxy plot:=200  legend:=0 ogl:=[<new template:=__TEMPLATE>];
+plotxy iy:=[bkname$]shname$!(1,2)  plot:=202 legend:=0 ogl:=2;
+";
