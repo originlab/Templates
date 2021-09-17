@@ -1,17 +1,18 @@
+%A=$;
 page.info.system.plotting.LT$="
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+int nrbegin = wks.r1;
+int nrend = wks.r2;
+range rrxy = (1, 5:%A(ncend))[%A(nrbegin):%A(nrend)];
 string bkname$ = page.name$;
 string shname$ = layer.name$;
-plotxy iy:=(1,5:end) plot:=200 legend:=0 ogl:=[<new template:=__TEMPLATE>];
-plotxy iy:=[bkname$]shname$!(1,4) plot:=200 legend:=0 color:=color(81,81,81) ogl:=1;
-plotxy iy:=[bkname$]shname$!(1,2)  plot:=201 legend:=0 ogl:=1;
-plotxy iy:=[bkname$]shname$!(1,3)  plot:=200 legend:=0 ogl:=1;
+plotxy iy:=rrxy plot:=200 legend:=0 ogl:=[<new template:=__TEMPLATE>];
+plotxy iy:=[bkname$]shname$!(1,4)[%A(nrbegin):%A(nrend)] plot:=200 legend:=0 color:=color(81,81,81) ogl:=1;
+plotxy iy:=[bkname$]shname$!(1,2)[%A(nrbegin):%A(nrend)]  plot:=201 legend:=0 ogl:=1;
+plotxy iy:=[bkname$]shname$!(1,3)[%A(nrbegin):%A(nrend)]  plot:=200 legend:=0 ogl:=1;
 layer -c;
 int nn = count-3;
 range plot1=1!1;
 set plot1 -lfp nn;
 ";
-
-
-
-
-

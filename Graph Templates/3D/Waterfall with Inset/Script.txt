@@ -2,10 +2,12 @@
 page.info.system.plotting.LT$="
 int nBegin = wks.c1;
 int nEnd = wks.c2;
+int nrbegin = wks.r1;
+int nrend = wks.r2;
 if(wks.col%A(nbegin).type==4)
 	nBegin = wks.c1 + 1;
-range rr = (%A(nbegin): %A(nend));
-range rrxy = (1, %A(nbegin):%A(nend));
+range rr = (%A(nbegin): %A(nend))[%A(nrbegin):%A(nrend)];
+range rrxy = (1, %A(nbegin):%A(nend))[%A(nrbegin):%A(nrend)];
 colstats -r 2 irng:=rr col:=InsetData>!1 Mean:=<optional> SD:=<optional> Median:=<optional> N:=<optional> max:=<new>;
 string bkname$ = page.name$;
 string shname$ = layer.name$;
