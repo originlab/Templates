@@ -1,11 +1,7 @@
-%A=$;
 page.info.system.plotting.LT$="
-int ncbegin = wks.c1;
-int ncend = wks.c2;
-int nrbegin = wks.r1;
-int nrend = wks.r2;
-range rrxy1=(1,3)[%A(nrbegin):%A(nrend)];
-range rrxy2=(1,4)[%A(nrbegin):%A(nrend)];
+colcopy -r 2 irng:=(1:4) sort:=asc ref:=!2 orng:=PlotData>!<new>;
+range rrxy1=(1,3);
+range rrxy2=(1,4);
 plotxy iy:=rrxy1 plot:=203 legend:= 0 ogl:=[<new template:=__TEMPLATE>];
 plotxy iy:=rrxy1 plot:=201 rescale:=0 legend:=0 ogl:=1;
 plotxy iy:=rrxy2  plot:=203 legend:=0 ogl:=2;
