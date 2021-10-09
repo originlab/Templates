@@ -191,7 +191,7 @@ BOOL TripartiteGridUnitsDlg::OnInitDialog()
 	m_editALabel = GetItem(IDC_TRIPARTITE_45_DEG_LABEL);
 	m_editBLabel = GetItem(IDC_TRIPARTITE_135_DEG_LABEL);
 	m_editMinorNumber = GetItem(IDC_TRIPARTITE_NUMBER_OF_MINOR_GRIDS);
-	
+	GetItem(IDC_TRIPARTITE_HELP_BUTTIN).Visible = false;
 	InitFromStorage();
 	return TRUE;
 }
