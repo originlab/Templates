@@ -1,0 +1,19 @@
+%A=$;
+page.info.system.plotting.LT$="
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+range rrplot2 = ((%A(ncbegin),%A(ncbegin+1)),%A(ncbegin+1));
+range rrplot3 = ((%A(ncbegin),%A(ncbegin+1)),(%A(ncbegin+1),%A(ncbegin+2)));
+int npy = ncend - ncbegin;
+if (npy==1)
+	colcopy -r 2 irng:=rrplot2 orng:=PlotData>!<new>;	
+else
+	colcopy -r 2 irng:=rrplot3 orng:=PlotData>!<new>;
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+plotxy (1,2:3) plot:=207 legend:=0 ogl:=<new template:=__TEMPLATE>;
+if (npy==1)
+{
+	plotxy iy:=[bkname$]shname$!(1,2)  plot:=201 legend:=0 ogl:=1;
+}
+";

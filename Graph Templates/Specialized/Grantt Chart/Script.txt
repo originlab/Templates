@@ -1,0 +1,11 @@
+%A=$;
+page.info.system.plotting.LT$="
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+int nrbegin = wks.r1;
+int nrend = wks.r2;
+range rrplot=(#,%A(ncbegin+2):%A(ncbegin+3))[%A(nrbegin):%A(nrend)];
+range rlabel=wcol(%A(ncbegin))[%A(nrbegin):%A(nrend)];
+plotxy rrplot plot:=207 ogl:=<new template:=__TEMPLATE>;
+layer.x.label.dataset$ = rlabel;
+";

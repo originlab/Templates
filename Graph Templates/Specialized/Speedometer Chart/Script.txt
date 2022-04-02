@@ -1,0 +1,18 @@
+%A=$;
+page.info.system.plotting.LT$="
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if ((ncend-ncbegin) != 2)
+{
+	type -b "To make this plot, you need to select three columns, The 1st and 2nd column are levels and percentage for the speedometer, 3rd column is the value of the pointer";
+	return 0;
+}
+range rrdata = (%A(ncbegin):%A(ncend));
+colcopy -r 2 irng:=rrdata orng:=PlotData>!<new>;
+wks.col3.type=4;
+wcol(4)[1]=38;
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+plotxy (1,2) plot:=225 legend:=0 ogl:=<new template:=speedometer>;
+plotxy iy:=[bkname$]shname$!(3,4) plot:=114 legend:=0 ogl:=2;
+";
