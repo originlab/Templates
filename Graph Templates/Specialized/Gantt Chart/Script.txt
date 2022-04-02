@@ -4,8 +4,19 @@ int ncbegin = wks.c1;
 int ncend = wks.c2;
 int nrbegin = wks.r1;
 int nrend = wks.r2;
+if ((ncend-ncbegin) != 3)
+{
+	type -b "To make this plot, please select 4 columns, the first 2 columns are category and item, respectively. The last 2 columns are beginning and end date, so they must be set in Date type properly";
+	return 0;
+}
+range rbegin = wcol(%A(ncend-1));
+range rend =  wcol(%A(ncend));
+if ((rbegin.format!=4) || (rend.format!=4))
+{
+	type -b "Please set the last two columns as Date type"
+}
 range rrplot=(#,%A(ncbegin+2):%A(ncbegin+3))[%A(nrbegin):%A(nrend)];
 range rlabel=wcol(%A(ncbegin))[%A(nrbegin):%A(nrend)];
-plotxy rrplot plot:=207 ogl:=<new template:=__TEMPLATE>;
+plotxy rrplot plot:=207 legend:=0 ogl:=<new template:=__TEMPLATE>;
 layer.x.label.dataset$ = rlabel;
 ";
