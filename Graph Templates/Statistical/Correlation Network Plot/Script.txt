@@ -1,0 +1,1 @@
+page.info.system.plotting.LT$="plot_network -r 2 weighted:=1 node_row:=label col_label:=L node_col:=selcol1 method:=fr template:=__TEMPLATE;";
