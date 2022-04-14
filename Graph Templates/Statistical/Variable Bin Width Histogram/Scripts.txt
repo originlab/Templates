@@ -14,7 +14,7 @@ freqcounts -r 2 irng:=rdata bin:=custom bins:=rboundary  begin:=1;
 wcol(2)[L]$=rdata[L]$;
 wks.addCol();
 wcol(6)[L]$="Bin Width";
-csetvalue formula:="C-A" col:=6;
+csetvalue formula:="C-A" col:=6 recalculate:=1;
 range rticks = wcol(3);
 plotxy (2,4) plot:=203 legend:=0 ogl:=<new template:=__TEMPLATE>;
 layer.x.TicksByData$=rticks;
