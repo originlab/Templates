@@ -1,0 +1,11 @@
+%A=$;
+%B=%;
+page.info.SYSTEM.PLOTTING.lt$="
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+string bkname%A = page.name%A;
+string shname%A = layer.name%A;
+plotxy (%A(ncbegin),%A(ncend)) plot:=202 ogl:=<new template:=__TEMPLATE>;
+layer.x2.label.formula$="interp(x, [%B(bkname%A)]%B(shname%A)!%A(ncbegin), [%B(bkname%A)]%B(shname%A)!%A(ncbegin+1))";
+xt.TEXT$=%B([%B(bkname%A)]%B(shname%A), ncbegin+1, L);
+";
