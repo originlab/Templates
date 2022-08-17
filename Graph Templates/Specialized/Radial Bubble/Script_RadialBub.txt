@@ -1,0 +1,29 @@
+strRadialBub$=<[<
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if ((ncend-ncbegin) <=2)
+{
+	type -b "To make the radial bubble plot, please select multiple columns, with the angular values in the first column and the radial values in the Long Name label row, the rest of data cells are values deciding the bubble size and color.";
+	return 0;
+}
+w2xyz -r 2 range:=rng format:=ycol ylabel:=param param:=L xcol:=col1 oz:=<new name:=RadialBubble>!(<new>,<new>,<new>);
+wcol(2)[L]$="";
+wcol(3)[L]$="";
+wcol(3)[C]$="";
+wks.col3.type = 1;
+plotxy (1, 2) plot:=201 ogl:=<new template:=__TEMPLATE>;
+run.LoadOC(Originlab\page_utils.c, 16);
+run -oc OnAfterCreateRadialBarPlot();
+layer.y.inc=2;
+sec -p 0.1;
+Legend -r;
+string ghplot$=page.name$;
+win -a %(bkname$);
+worksheet -s;
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
+>]>;
+
+page.info.system.plotting.LT$=strRadialBub$

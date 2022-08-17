@@ -1,0 +1,23 @@
+strPieCat$=<[<
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if (wks.sel != 26)
+{
+	type -b "To make this plot, please select one column with categorical data";
+	return 0;
+}
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+range rrdata = ($(ncbegin):$(ncend));
+colcopy -r 2 irng:=rrdata orng:=PieCatData>!<new>;
+wks.addcol();
+csetvalue formula:="A/A" script:="wks.col1.type=4; wks.col1.categorical.type=2;wks.col1.categorical.sort=0;" col:=2;
+plotxy (1,2) plot:=225 legend:=0 ogl:=<new template:=__TEMPLATE>;
+string ghplot$=page.name$;
+win -a %(bkname$);
+worksheet -s;
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
+>]>;
+
+page.info.system.plotting.LT$=strPieCat$;

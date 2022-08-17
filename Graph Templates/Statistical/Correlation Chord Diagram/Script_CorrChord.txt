@@ -1,0 +1,35 @@
+strTemplate$=<[<
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if ((ncend-ncbegin) <= 2)
+{
+	type -b "Please select at least three columns to create the plot";
+	return 0;
+}
+
+corrcoef -r 2 rt:=<optional> sig:=0;
+w2xyz -r 2 format:=ycol ylabel:=param param:=L xcol:=1 oz:=[<input>]<new name:=CorrChordPlotData>!(<new>,<new>,<new>);
+wcol(2)[L]$="";
+wcol(3)[L]$="";
+wcol(3)[C]$="";
+wks.col3.type = 1;
+wks.addcol();
+csetvalue formula:="abs(C)" col:=4;
+wks.colsel(1);
+wks.colsel(2);
+wks.colsel(4);
+worksheet -p 115 __TEMPLATE;
+run -oc {
+	OnAfterCreateChordPlot();
+}
+string ghplot$=page.name$;
+win -a %(bkname$);
+worksheet -s;
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
