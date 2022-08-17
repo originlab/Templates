@@ -1,0 +1,13 @@
+strTemplate$=<[<
+
+if( !wks.MATCHSELCOL(215) )
+{
+	type -b $general.SelectionXY;
+	return 0;
+}
+
+worksheet -p 215 __TEMPLATE;
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

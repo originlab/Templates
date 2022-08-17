@@ -1,0 +1,27 @@
+strViolinSplitConf$=<[<
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+if( !wks.MATCHSELCOL(263)  )
+{
+	type -b "You must select at least two columns. Last column needs to contain 2 categories only";
+	return 0;
+}
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+range rdata = ($(ncbegin):$(ncend-1));
+range rgroup = $(ncend);
+wunstackcol -r 2 irng1:=rdata irng2:=rgroup sort:=data ow:=ViolinSplitConfData>;
+string shplot$ = layer.name$;
+worksheet -s 0 0;
+worksheet -p 206 __TEMPLATE;
+string ghplot$ = %H;
+win -a %(bkname$);
+worksheet -s;
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
+>]>;
+page.info.system.plotting.LT$=strViolinSplitConf$;
+
+
+
+

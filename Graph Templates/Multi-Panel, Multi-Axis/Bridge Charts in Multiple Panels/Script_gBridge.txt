@@ -1,0 +1,72 @@
+strTemplate$=<[<
+
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+
+if( !wks.MATCHSELCOL(215)  )
+{
+	type -b $general.SelectionXY;
+	return 0;
+}
+if( %(%H,@Y#,2) < 2  )
+{
+	type -b "Please select at least two Y columns";
+	return 0;
+}
+for (int ii=ncbegin; ii<=ncend;ii++)
+{
+	if (IsEmpty(wcol($(ii))[L]$))
+	{
+		type -b "Please put the grouping information in "Long Name" row";
+		return 0;		
+	}
+}
+
+string strX, strData;
+if  (%(%H,@Y-, ncbegin)==0)
+{
+	strX$ = wcol($(ncbegin));
+	strdata$ = ($(ncbegin):$(ncend));
+}
+else
+{
+	int nXX =wks.findX($(ncbegin));
+	strX$ = wcol($(nXX));
+	strdata$= ($(nXX),$(ncbegin):$(ncend));
+};
+range rX = strX$;
+range rrdata = strdata$;
+rX.categorical.type=2;
+rX.categorical.sort =0;
+colcopy -r 1 irng:=rrdata orng:=DataChange>!<new>;
+wks.col1.categorical.type=2;
+wks.col1.categorical.sort =0;
+int coldata = wks.ncols;
+wks.ncols = 2*coldata-1;
+int numY = coldata-1;
+for (int ii = 1; ii<= numY; ii++)
+{
+	int nindex = coldata+ii;
+	csetvalue recalculate:=1 formula:="diff(wcol(j-$(numY)),2)" col:=$(nindex);
+	wcol($(nindex))[L]$=wcol($(nindex-numY))[L]$;
+}
+
+range rrchange = ($(coldata+1):$(2*coldata-1));
+wstackcol -r 1 irng:=rrchange tr.identifiers:={L} include:=wcol(1) gln:="<Group Row Header>" ow:=PlotData>;
+wcol(2)[L]$="";
+wcol(3)[L]$="";
+range rplot = (wcol(1), wcol(3));
+plot_group iy:=rplot iy2:=<optional> type:=bridge horz:=wcol(2) template:=__TEMPLATE;
+string ghplot$=page.name$;
+win -a %(bkname$);
+worksheet -s;
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
+
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
