@@ -18,7 +18,7 @@ if( %(%H,@Y#,2) < 2  )
 }
 for (int ii=ncbegin; ii<=ncend;ii++)
 {
-	if (IsEmpty(wcol($(ii))[L]$))
+	if (IsEmpty(wcol($(ii))[L]$) && wks.col$(ii).type==1)
 	{
 		type -b "Please put the grouping information in "Long Name" row";
 		return 0;		

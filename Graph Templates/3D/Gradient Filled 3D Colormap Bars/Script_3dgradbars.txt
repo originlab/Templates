@@ -1,0 +1,12 @@
+strTemplate$=<[<
+
+if( !wks.MATCHSELCOL(242) )
+{
+	type -b "Please select XYZ columns to plot the gradient filled 3D colormap bars.";
+	return 0;
+}
+plotxyz iz:=<active> plot:=242 ogl:=<new template:=__TEMPLATE>; 
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
