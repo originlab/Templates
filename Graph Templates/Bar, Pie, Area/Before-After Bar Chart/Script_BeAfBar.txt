@@ -23,7 +23,7 @@ range rrightbar = (3, 4);
 range rbox = (5:6);
 range rlabel1 = (7, 5);
 range rlabel2 = (8, 5);
-plotxy rleftbar plot:=215 legend:=0 ogl:=<new template:=BeAfBar>;
+plotxy rleftbar plot:=215 legend:=0 ogl:=<new template:=__TEMPLATE>;
 plotxy iy:=rrightbar plot:=215 legend:=0 ogl:=2;
 plotxy iy:=rbox plot:=206 legend:=0 ogl:=3;
 plotxy iy:=rlabel1 plot:=201 legend:=0 ogl:=3;
