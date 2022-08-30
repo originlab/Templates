@@ -1,0 +1,16 @@
+strTemplate$=<[<
+
+	int nCount = 0;
+	string strRng1$, strRng2$;
+	run -oc { nCount = get_select_two_column_for_plot(strRng1$, strRng2$); }
+	if ( nCount != 2 )
+	{
+		type -b $general.Only2Columns;
+		return 0;
+	}
+
+	worksheet -p 206 __TEMPLATE;
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
