@@ -1,0 +1,21 @@
+strTemplate$=<[<
+if (page.nlayers < 2)
+{
+	type -b "Please put the XRD data as XY columns in the 1st sheet and PDF data as XY columns in the 2nd sheet";
+	return 0;	
+}
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+range rrxyxrd = (?, 2:end);
+page.active=2;
+range rrxypdf = (?, 2:end);
+plotxy iy:=rrxyxrd  plot:=200 legend:=0 ogl:=[<new template:=__TEMPLATE>];
+plotxy iy:= rrxypdf  plot:=201 legend:=0 ogl:=2;
+string ghplot$=page.name$;
+win -a %(bkname$);
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
