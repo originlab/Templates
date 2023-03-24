@@ -1,0 +1,43 @@
+
+strTemplate$=<[<	
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if ((ncend-ncbegin)<0)
+{
+	type -b "To make this plot, please select at least one Y columns. Put Z values in the Comments row.";
+	return 0;
+}
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+loop(ii,ncbegin,ncend)
+{
+	if ((wks.col$(ii).type==1) && (Value(wcol(ii)[C]$) == 0/0))
+	{
+		type -b "Please put the Z values in Comments label row of Y columns, which define the poistion of the 3D planes.";
+		break;
+	}
+}
+dataset ds;
+dataset dsnew;
+int nn = 1;
+loop(ii,ncbegin,ncend)
+{
+	double dd = Value(wcol(ii)[C]$);
+	if(!isna(dd))
+	{
+		ds[nn] = dd;
+		nn++;
+	}
+}
+dsnew = Unique(ds);
+worksheet -P 210 __TEMPLATE;
+set %C -LGCB 0;	//queue, wait until current window finish drawing.
+for (int ii; ii<dsnew.getsize(); ii++)
+{
+	double pos = dsnew[ii];
+	layer.plane.add(1, pos, 18);
+}
+legend -r;
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

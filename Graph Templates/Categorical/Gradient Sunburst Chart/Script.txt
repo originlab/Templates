@@ -1,0 +1,13 @@
+strTemplate$=<[<
+	if( !wks.MATCHSELCOL(122) )
+	{
+		type -b "To create the graph, please select XXY columns. The last column should be data values(Set as Y) and all other columns are categories and sub-categories(Set as X)";
+		return 0;
+	}		
+	run.section(plot.ogs,general,122 __TEMPLATE 0 1);
+	run.LoadOC(Originlab\page_utils.c, 16);
+	run -oc OnAfterCreatePiePlot(1);
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
+

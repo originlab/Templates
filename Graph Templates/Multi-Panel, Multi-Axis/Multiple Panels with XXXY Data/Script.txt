@@ -1,0 +1,7 @@
+strTemplate$=<[<
+
+plotbylabel -cx -d group:=<xcol> plottype:=linesymb  rows:=1 template:= __TEMPLATE;
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

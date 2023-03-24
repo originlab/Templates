@@ -1,0 +1,16 @@
+strTemplate$=<[<
+
+plotxy -cx plot:=202 ogl:=[<new template:= __TEMPLATE>];
+
+str$ = legend.text$;
+layer -c;
+loop(ii,1,count)
+{
+	str$ = str.substitute("X)",")",2*ii)$
+}
+legend.text$ = str$;
+
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

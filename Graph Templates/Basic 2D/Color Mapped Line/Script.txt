@@ -1,0 +1,12 @@
+strTemplate$=<[<
+
+	if( !wks.MATCHSELCOL(194) )
+	{
+		type -b "To make this plot, you need to select columns designated as 'XYY' with exact number of columns.";
+		return 0;
+	}
+	worksheet -p 194 __TEMPLATE;
+
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

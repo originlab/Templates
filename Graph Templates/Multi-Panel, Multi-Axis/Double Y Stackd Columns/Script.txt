@@ -1,0 +1,31 @@
+strTemplate$=<[<
+	if( !wks.MATCHSELCOL(213) )
+	{
+		type -b "To create the graph, please select at least one Y columns. Group info puts in Comment label row.";
+		return 0;
+	}
+	int ncbegin = wks.c1;
+	int ncend = wks.c2;
+	loop(ii,ncbegin,ncend)
+	{
+		if ((wks.col$(ii).type==1) && (IsEmpty(wcol(ii)[C]$)))
+		{
+			type -b "Please put the Group info in Comments label row of Y columns";
+			break;
+		}
+	}
+
+run.section(plot.ogs,general,213 __TEMPLATE 0);
+layer.y.indivscale = 1;
+string strY1$ = %(1, @LC);
+doc -e D{
+	range rr = %C;
+	int nn = 1;
+	if( !compare(rr[C]$, strY1$) )
+		nn = 2;
+	set rr -ay $(nn);
+}
+run.section(Graph,Rescale,xzm);
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

@@ -1,0 +1,13 @@
+strTemplate$=<[<	
+	NumYCols = %(%H,@Y#P,2);
+	if ( NumYCols < 3 ) 
+	{
+		type -b $General.3YColumnsOrMore;
+		return 1;
+	}
+	
+	run.section(,general,124 __TEMPLATE 0 1);
+	run.section(standard, legend, 0);
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
