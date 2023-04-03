@@ -1,0 +1,31 @@
+strTemplate$=<[<
+	if( !wks.MATCHSELCOL(242) )
+	{
+		type -b "To create the graph, select at least two Z columns with Left/right axis assignment info in the Comment label row.";
+		return 0;
+	}
+	int ncbegin = wks.c1;
+	int ncend = wks.c2;
+	loop(ii,ncbegin,ncend)
+	{
+		if ((wks.col$(ii).type==6) && (IsEmpty(wcol(ii)[C]$)))
+		{
+			type -b "Please put the Left/right axis assignment info in Comments label row of Z columns";
+			break;
+		}
+	}
+
+worksheet -P 242 __TEMPLATE;
+layer.z.indivscale = 1;
+string strZ1$ = %(1, @LC);
+doc -e D{
+	range rr = %C;
+	int nn = 1;
+	if( !compare(rr[C]$, strZ1$) )
+		nn = 2;
+	set rr -az $(nn);
+}
+layer -all ask;
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

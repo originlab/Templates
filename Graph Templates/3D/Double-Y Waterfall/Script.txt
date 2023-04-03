@@ -1,0 +1,31 @@
+strTemplate$=<[<
+	if( !wks.MATCHSELCOL(210) )
+	{
+		type -b "To create the graph, select at least two Y columns with Left/right axis assignment info in the Comment label row.";
+		return 0;
+	}
+	int ncbegin = wks.c1;
+	int ncend = wks.c2;
+	loop(ii,ncbegin,ncend)
+	{
+		if ((wks.col$(ii).type==1) && (IsEmpty(wcol(ii)[C]$)))
+		{
+			type -b "Please put the Left/right axis assignment info in Comments label row of Y columns";
+			break;
+		}
+	}
+
+worksheet -P 210 __TEMPLATE;
+layer.y.indivscale = 1;
+string strY1$ = %(1, @LC);
+doc -e D{
+	range rr = %C;
+	int nn = 1;
+	if( !compare(rr[C]$, strY1$) )
+		nn = 2;
+	set rr -ay $(nn);
+}
+layer -all ask;
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
