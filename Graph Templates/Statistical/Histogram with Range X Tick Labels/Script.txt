@@ -1,0 +1,20 @@
+strTemplate$=<[<	
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if ((ncend-ncbegin)!=0)
+{
+	type -b "To make this plot, please select one and only one column.";
+	return 0;
+};
+
+freqcounts -r 1 irng:=<active> outleft:=1 outright:=1 begin:=1 cumulcount:=0 rd:=[<input>]PlotData>;
+wks.col=1;
+wks.insert();
+col(1)[L]$="Labels";
+wks.col1.type=4;
+wks.col.categorical.type =2;
+wks.col.categorical.sort =0;
+csetvalue col:=1 formula:="ifs(i==1, "<="+D$,  i==count(B), ">"+B$, 1, B$+"-"+D$)" recalculate:=1;
+plotxy iy:=(1, 5) plot:=203 legend:=0 ogl:=[<new template:=__TEMPLATE>];
+>]>;
+page.info.system.plotting.LT$=strTemplate$;
