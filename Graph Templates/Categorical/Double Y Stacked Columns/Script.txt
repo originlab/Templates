@@ -1,2 +1,0 @@
-page.info.system.plotting.LT$="plotbylabel group:=C plottype:=column rows:=1 cols:=1 template:=__TEMPLATE;
-doc -e lp {layer -b s 1};";
