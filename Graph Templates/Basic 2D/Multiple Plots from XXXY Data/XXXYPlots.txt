@@ -1,5 +1,11 @@
 strTemplate$=<[<
 
+if (wks.sel==0)
+{
+	type -b "Please activate a worksheet with multiple X columns and at least one Y column";
+	return 0;	
+}
+
 plotxy -cx plot:=202 ogl:=[<new template:= __TEMPLATE>];
 
 str$ = legend.text$;

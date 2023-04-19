@@ -1,5 +1,5 @@
 strTemplate$=<[<
-	if( !wks.MATCHSELCOL(213) )
+	if( !wks.MATCHSELCOL(213) || wks.sel==0)
 	{
 		type -b "To create the graph, please select at least one Y columns. Group info puts in Comment label row.";
 		return 0;

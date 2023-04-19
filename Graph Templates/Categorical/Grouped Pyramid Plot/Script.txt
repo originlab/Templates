@@ -1,8 +1,15 @@
-page.info.system.plotting.LT$="
+strTemplate$=<[<
+if (wks.sel==0)
+{
+	type -b "Please activate a worksheet with data arranged in four columns in order as X, Group, Y1, Y2";
+	return 0;	
+}
 colcopy -r 2 irng:=(1:4) sort:=asc ref:=!2 orng:=PlotData>!<new>;
 range rrxy1=(1,3);
 range rrxy2=(1,4);
 plotxy iy:=rrxy1 plot:=203 legend:= 0 ogl:=[<new template:=__TEMPLATE>];
 plotxy iy:=rrxy1 plot:=201 rescale:=0 legend:=0 ogl:=1;
 plotxy iy:=rrxy2  plot:=203 legend:=0 ogl:=2;
-";
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

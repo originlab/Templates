@@ -1,9 +1,10 @@
 strTemplate$=<[<
-if (page.nlayers < 2)
+if (page.nlayers < 2 || wks.sel==0)
 {
 	type -b "Please put the XRD data as XY columns in the 1st sheet and PDF data as XY columns in the 2nd sheet";
 	return 0;	
 }
+page.active=1;
 string bkname$ = page.name$;
 string shdata$ = layer.name$;
 range rrxyxrd = (?, 2:end);

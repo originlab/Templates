@@ -1,7 +1,7 @@
 strTemplate$=<[<	
 int ncbegin = wks.c1;
 int ncend = wks.c2;
-if ((ncend-ncbegin)!=0)
+if ((ncend-ncbegin)!=0 || wks.sel==0)
 {
 	type -b "To make this plot, please select one and only one column.";
 	return 0;
