@@ -6,6 +6,7 @@ if (exist(%H)!=5)
 		return 0;
 }
 
+worksheet -p 103  __TEMPLATE;
 >]>;
 
 page.info.system.plotting.LT$=strTemplate$;
