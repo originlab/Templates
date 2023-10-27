@@ -1,0 +1,23 @@
+strTemplate$=<[<
+string fn$= system.path.program$ + "Samples\Graphing\PeriodicTable.txt";
+newbook;
+impasc fname:=fn$ 
+options.ImpMode:=3
+options.Sparklines:=0
+options.Names.AutoNames:=0
+options.Names.FNameToSht:=0
+options.names.FNameToBk:=0 
+options.names.FNameToBkComm:=0;
+page.longname$ = "Periodic Table";
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+range rr = [bkname$]shname$!(1, 2);
+plotxy iy:=rr plot:=201 rescale:=0 legend:=0 ogl:=<new template:=__TEMPLATE>;
+plotxy iy:=rr  plot:=201 rescale:=0 legend:=0 ogl:=1;
+plotxy iy:=rr  plot:=201 rescale:=0 legend:=0 ogl:=1;
+type -b "Fill the element values in column E of %(bkname$) to update the cell color";
+win -a %(bkname$);
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
+

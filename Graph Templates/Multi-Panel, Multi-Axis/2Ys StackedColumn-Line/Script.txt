@@ -1,0 +1,12 @@
+
+
+page.active=1;
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+range rrxycol = (1, 2:end);
+page.active=2;
+range rrxyline = (1, 2:end);
+plotxy iy:=rrxycol  plot:=213 legend:=0 ogl:=[<new template:=2Ys_StackColLine>];
+plotxy iy:= rrxyline  plot:=213 legend:=0 ogl:=2;
+page.active=2;
+layer -b s 0;

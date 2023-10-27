@@ -1,0 +1,48 @@
+strTemplate$=<[<
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+int nrbegin = wks.r1;
+int nrend = wks.r2;
+if ((ncend-ncbegin)<3||(nrend-nrbegin)< 2)
+{
+		type -b "Please select a whole worksheet with radial labels in the first column, angular labels in Long Name, and rest of data cells are Z values for polar heatmap";
+	return 0;
+}
+loop(ii,2,wks.ncols)
+{
+	if (IsEmpty(wcol(ii)[L]$))
+	{
+		type -b "Please put the angular labels in Long Name";
+		break;
+	}
+}
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+int shindex = page.active;
+int ncend = wks.ncols;
+w2m -r 1 om:= PolarHeatmap>;
+sec -p 0.1;
+wks.col1.x2 = wks.ncols;
+string mkname$ = page.name$;
+win -a %(bkname$);
+colcopy -r 1 irng:=$(shindex)!wcol(1) orng:=PolarTickLabels>!<new> lname:=0 units:=0 comments:=0 para:=0 usrdef:=0;
+int pdindex = page.active;
+wks.addCol();
+csetvalue formula:="$(shindex)!wcol(i+1)[L]$" col:=wcol(2)[1:$(ncend-1)];
+wcol(1)[L]$="Radial";
+wcol(2)[L]$="Angular";
+range rXLabel = wcol(2);
+range rYLabel = wcol(1);
+page.active=shindex;
+win -a %(mkname$);
+worksheet -p 226 __TEMPLATE;
+run.LoadOC(Originlab\page_utils.c, 16);
+run -oc OnAfterCreateRadialBarPlot();
+layer.x.inc=1;
+layer.y.inc=1;
+layer.x2.label.dataset$ = [%(bkname$)]$(pdindex)!2;
+win -a %(mkname$);
+win -ia;
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
