@@ -1,0 +1,5 @@
+%A=%
+page.info.system.plotting.LTAfter$="string path=%A@Y;path.Delete(path.GetLength());int slash=path.ReverseFind('\');path$=path.Left(slash)$;page.active = 1;run.LoadOC(%A(path$)Templates\TimeSeriesExplorer.c, 16);run -oc {OriginRangeSliderInit();}"
+
+//Run following command everytime before saving this template
+zoomrect.SETNUMERICVAR() 
