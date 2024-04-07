@@ -104,6 +104,109 @@ static double _sign_width(double DX, bool bAscending)
 	return -DX;
 }
 
+///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+#define ORS_TEXT_RANGE_NAME "ORSTextRange"
+#define ORS_TEXT_RANGE_FORMAT "%s - %s"
+static bool _SetTextRange(const GraphLayer& gl, const GraphLayer& gl2, int nMode)
+{
+	GraphObject go = gl.GraphObjects(ORS_TEXT_RANGE_NAME);
+	if(!go)
+		return false;
+	
+	string strText = "";
+	AxisObject aoXLabel = gl.XAxis.AxisObjects(AXISOBJPOS_LABEL_FIRST);
+	int nLabelType;
+	aoXLabel.GetTypeFormatEtc(nLabelType);
+	bool bDate = nLabelType == OULABEL_DATE;
+
+	vector<double> vd;
+    vd.Add(gl2.X.From);
+    vd.Add(gl2.X.To);
+    
+    vector<string> vs;
+    string strTime;
+	if(nMode == ORS_ALL || nMode == ORS_MODE_INVALID)
+	{
+		if(bDate)
+		{
+			strTime = get_date_str(vd[0], LDF_OBJ_CUSTOM, "MM/dd/yyyy");
+			vs.Add(strTime);
+			strTime = get_date_str(vd[1], LDF_OBJ_CUSTOM, "MM/dd/yyyy");
+			vs.Add(strTime);
+		}
+		else
+		{
+			strTime = get_time_str(vd[0], LTF_OBJ_CUSTOM, "DDD HH:mm");
+			vs.Add(strTime);
+			strTime = get_time_str(vd[1], LTF_OBJ_CUSTOM, "DDD HH:mm");
+			vs.Add(strTime);
+		}
+	}
+	else if(nMode >= ORSD_MODE_BEGIN && nMode < ORSD_MODE_END)
+	{
+		switch(nMode)
+		{
+		case ORSD_1_DAY:
+		{
+			strTime = get_date_str(vd[0], LDF_OBJ_CUSTOM, "MM/dd/yyyy HH:mm");
+			vs.Add(strTime);
+			strTime = get_date_str(vd[1], LDF_OBJ_CUSTOM, "MM/dd/yyyy HH:mm");
+			vs.Add(strTime);
+		}
+			break;
+		case ORSD_1_MONTH:
+		case ORSD_1_QUARTER:
+		case ORSD_6_MONTHS:
+		case ORSD_1_YEAR:
+			strTime = get_date_str(vd[0], LDF_OBJ_CUSTOM, "MM/dd/yyyy");
+			vs.Add(strTime);
+			strTime = get_date_str(vd[1], LDF_OBJ_CUSTOM, "MM/dd/yyyy");
+			vs.Add(strTime);
+			break;
+		default:
+			ASSERT(FALSE);
+			return false;
+		}
+	}
+	else if(nMode >= ORST_MODE_BEGIN && nMode < ORST_MODE_END)
+	{
+		switch(nMode)
+		{
+		case ORST_1_DAY:
+		case ORST_12_HOURS:
+		case ORST_6_HOURS:
+		case ORST_1_HOUR:
+			strTime = get_time_str(vd[0], LTF_OBJ_CUSTOM, "DDD HH:mm");
+			vs.Add(strTime);
+			strTime = get_time_str(vd[1], LTF_OBJ_CUSTOM, "DDD HH:mm");
+			vs.Add(strTime);
+			break;
+		case ORST_15_MINUTES:
+		case ORST_1_MINUTE:
+			strTime = get_time_str(vd[0], LTF_OBJ_CUSTOM, "HH:mm:ss");
+			vs.Add(strTime);
+			strTime = get_time_str(vd[1], LTF_OBJ_CUSTOM, "HH:mm:ss");
+			vs.Add(strTime);
+			break;
+		case ORST_1_SECOND:
+			strTime = get_time_str(vd[0], LTF_OBJ_CUSTOM, "HH:mm:ss.###");
+			vs.Add(strTime);
+			strTime = get_time_str(vd[1], LTF_OBJ_CUSTOM, "HH:mm:ss.###");
+			vs.Add(strTime);
+			break;
+	
+		default:
+			ASSERT(FALSE);
+			return false;
+		}
+	}
+	
+	strText.Format(ORS_TEXT_RANGE_FORMAT, vs[0], vs[1]);
+	go.Text = strText;
+	return true;
+}
+///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+
 static bool _MoveSlider(const GraphLayer& gl, const GraphLayer* pgl2, const GraphObject& go, int nMode, bool bStart, int nLeftInc = 0, bool bCorrectValidLeftRight = false)
 {
 	ResizeEventValidTempChange revTempChange;
@@ -674,6 +777,10 @@ public:
 			goRange.Text = strRangeText;
 		}
 		///------ End RANGE_BUTTON_SHOW_SELECT_AND_MOVE_TO_BEGIN_END
+		
+		///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+		_SetTextRange(gl, gl2, nCmd);
+		///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
     }
     
     void Init(Menu& menu, const GraphObject& go)
@@ -773,6 +880,16 @@ void OriginRangeSliderInc(int nLeftInc)
 	//_MoveSlider(gl, go, dMode, dStart > 0.0, nLeftInc);
 	_MoveSlider(gl, NULL, go, dMode, dStart > 0.0, nLeftInc);
 	///------ End AXIS_INC_DEPENDS_ON_RANGE_MODE
+	
+	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+	GraphPage pg = gl.GetPage();
+	if(pg)
+	{
+		GraphLayer gl2 = pg.Layers(gl.GetIndex()+1);
+		if(gl2)
+			_SetTextRange(gl, gl2, dMode);
+	}
+	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
 
 static string s_strAutoFlipStart = " \\f:Segoe UI Symbol(▶) ";
@@ -802,6 +919,16 @@ void OriginRangeSliderMove()
 			s_goAutoFlip.Text = s_strAutoFlipStart;
 		LT_execute("Timer -k");
 	}
+	
+	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+	GraphPage pg = s_gl.GetPage();
+	if(pg)
+	{
+		GraphLayer gl2 = pg.Layers(s_gl.GetIndex()+1);
+		if(gl2)
+			_SetTextRange(s_gl, gl2, dMode);
+	}
+	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
 
 void OriginRangeSliderAutoFlipDialog()
@@ -932,6 +1059,10 @@ void OriginRangeSliderInit()
 
 	go.DY = gl.Y.To - gl.Y.From;
 	go.Y = gl.Y.From + go.DY/2;
+	
+	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+	_SetTextRange(gl, gl2, dMode);
+	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
 ///------ Tony 01/22/2023 ORG-28342-S3 RANGE_BUTTON_SHOW_SELECT_AND_MOVE_TO_BEGIN_END
 void OriginRangeSliderMoveToBegin()
@@ -948,6 +1079,19 @@ void OriginRangeSliderMoveToBegin()
 	double dTo = gl.X.To;
 	bool bAscending = dTo > dFrom;
 	go.X = dFrom + _sign_width(go.DX, bAscending)/2;
+	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+	GraphPage pg = gl.GetPage();
+	if(pg)
+	{
+		GraphLayer gl2 = pg.Layers(gl.GetIndex()+1);
+		if(gl2)
+		{
+			double dMode = 0.0;
+			go.GetStorageNumericVar(ORS_MODE_NAME, dMode);
+			_SetTextRange(gl, gl2, dMode);
+		}
+	}
+	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
 
 void OriginRangeSliderMoveToEnd()
@@ -964,6 +1108,19 @@ void OriginRangeSliderMoveToEnd()
 	double dTo = gl.X.To;
 	bool bAscending = dTo > dFrom;
 	go.X = dTo - _sign_width(go.DX, bAscending)/2;
+	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+	GraphPage pg = gl.GetPage();
+	if(pg)
+	{
+		GraphLayer gl2 = pg.Layers(gl.GetIndex()+1);
+		if(gl2)
+		{
+			double dMode = 0.0;
+			go.GetStorageNumericVar(ORS_MODE_NAME, dMode);
+			_SetTextRange(gl, gl2, dMode);
+		}
+	}
+	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
 
 void OriginRangeSliderResize()
@@ -983,10 +1140,47 @@ void OriginRangeSliderResize()
 	if(!goRange)
 		return;
 	
-	go.SetStorageNumericVar(ORS_MODE_NAME, 0.0, FALSE);
+	go.SetStorageNumericVar(ORS_MODE_NAME, ORS_MODE_INVALID, FALSE);
 	
 	string strRangeText;
 	strRangeText.Format(s_strRangeFormat, STR_CUSTOM);
 	goRange.Text = strRangeText;
+	
+	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+	GraphPage pg = gl.GetPage();
+	if(pg)
+	{
+		GraphLayer gl2 = pg.Layers(gl.GetIndex()+1);
+		if(gl2)
+		{
+			_SetTextRange(gl, gl2, ORS_MODE_INVALID);
+		}
+	}
+	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+}
+
+///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
+void OriginRangeSliderAfterMove()
+{
+	GraphLayer glActive = Project.ActiveLayer();
+	if(!glActive)
+		return;
+	
+	GraphPage pg = glActive.GetPage();
+	if(!pg)
+		return;
+	
+	GraphLayer gl = pg.Layers(0);
+	GraphObject go = gl.GraphObjects(ORS_SLIDER_NAME);
+	if(!go)
+		return;
+
+	GraphLayer gl2 = pg.Layers(1);
+	if(!gl2)
+		return;
+
+	double dMode = 0.0;
+	go.GetStorageNumericVar(ORS_MODE_NAME, dMode);
+	_SetTextRange(gl, gl2, dMode);
 }
 ///------ End RANGE_BUTTON_SHOW_SELECT_AND_MOVE_TO_BEGIN_END
