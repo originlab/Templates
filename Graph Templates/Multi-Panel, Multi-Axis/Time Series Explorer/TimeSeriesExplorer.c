@@ -237,6 +237,8 @@ static bool _MoveSlider(const GraphLayer& gl, const GraphLayer* pgl2, const Grap
 		{
 			Axis axis = pgl2->XAxis;
 			Tree tr;
+			tr.Root.Scale.IncrementBy.nVal = OAI_MAJORTICKCOUNT;
+			tr.Root.Scale.MajorTicksCount.nVal = 10;
 			if(bDate)
 			{
 				tr.Root.Labels.BottomLabels.DateFormat.nVal = LDF_AUTO;
@@ -247,11 +249,11 @@ static bool _MoveSlider(const GraphLayer& gl, const GraphLayer* pgl2, const Grap
 				tr.Root.Labels.BottomLabels.TimeFormat.nVal = LTF_AUTO;
 				tr.Root.Labels.BottomLabels.TimeCustomDisplay.strVal = "";
 			}
-		
+			
 			if(0 == axis.UpdateThemeIDs(tr.Root))
+			{
 				axis.ApplyFormat(tr, true, true);
-				
-			pgl2->Rescale();
+			}
 		}
 		///------ End AXIS_INC_DEPENDS_ON_RANGE_MODE
 		return false;
@@ -595,9 +597,10 @@ static bool _MoveSlider(const GraphLayer& gl, const GraphLayer* pgl2, const Grap
 	if(pgl2)
 	{
 		Axis axis = pgl2->XAxis;
-		TreeNode trTheme = pgl2->XAxis.GetFormat(FPB_ALL, FOB_ALL, TRUE, TRUE);
+		//TreeNode trTheme = pgl2->XAxis.GetFormat(FPB_ALL, FOB_ALL, TRUE, TRUE);
 
 		Tree tr;
+		tr.Root.Scale.IncrementBy.nVal = OAI_VALUE;
 		tr.Root.Scale.Value.dVal = dXInc;
 		if(bDate)
 		{
@@ -1123,38 +1126,58 @@ void OriginRangeSliderMoveToEnd()
 	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
 
-void OriginRangeSliderResize()
+#define MAJOR_TICK_COUNT_SIZE 10
+void OriginRangeSliderAfterResize()
 {
 	if(!ResizeEventValidTempChange::m_bResizeEventValid)
 		return;
 	
-	GraphLayer gl = Project.ActiveLayer();
-	if(!gl)
+	GraphLayer glActive = Project.ActiveLayer();
+	if(!glActive)
 		return;
 	
+	GraphPage pg = glActive.GetPage();
+	if(!pg)
+		return;
+	
+	GraphLayer gl = pg.Layers(0);
 	GraphObject go = gl.GraphObjects(ORS_SLIDER_NAME);
 	if(!go)
 		return;
-	
+
 	GraphObject goRange = gl.GraphObjects(ORS_RANGE_NAME);
 	if(!goRange)
 		return;
 	
 	go.SetStorageNumericVar(ORS_MODE_NAME, ORS_MODE_INVALID, FALSE);
-	
 	string strRangeText;
 	strRangeText.Format(s_strRangeFormat, STR_CUSTOM);
 	goRange.Text = strRangeText;
 	
 	///------ Tony 04/07/2024 ORG-28342-S4 TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
-	GraphPage pg = gl.GetPage();
-	if(pg)
+	GraphLayer gl2 = pg.Layers(1);
+	if(gl2)
 	{
-		GraphLayer gl2 = pg.Layers(gl.GetIndex()+1);
-		if(gl2)
+		_SetTextRange(gl, gl2, ORS_MODE_INVALID);
+		
+		///------ Tony 01/17/2023 ORG-28342-S2 AXIS_INC_DEPENDS_ON_RANGE_MODE
+		Axis axis = gl2.XAxis;
+		TreeNode trTheme = gl2.XAxis.GetFormat(FPB_ALL, FOB_ALL, TRUE, TRUE);
+		if(trTheme.Root.Scale.IncrementBy.nVal == OAI_VALUE)
 		{
-			_SetTextRange(gl, gl2, ORS_MODE_INVALID);
+			if( (fabs(trTheme.Root.Scale.To.dVal - trTheme.Root.Scale.From.dVal) / trTheme.Root.Scale.Value.dVal) > MAJOR_TICK_COUNT_SIZE)
+			{
+				Tree tr;
+				tr.Root.Scale.IncrementBy.nVal = OAI_MAJORTICKCOUNT;
+				tr.Root.Scale.MajorTicksCount.nVal = MAJOR_TICK_COUNT_SIZE;
+
+				if(0 == axis.UpdateThemeIDs(tr.Root))
+				{
+					axis.ApplyFormat(tr, true, true);
+				}
+			}
 		}
+		///------ End AXIS_INC_DEPENDS_ON_RANGE_MODE
 	}
 	///------ End TEXT_OBJECT_TO_SHOW_RANGE_OF_TOP_LAYER
 }
