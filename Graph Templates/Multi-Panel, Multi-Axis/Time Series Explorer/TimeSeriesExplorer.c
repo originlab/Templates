@@ -239,14 +239,15 @@ static bool _MoveSlider(const GraphLayer& gl, const GraphLayer* pgl2, const Grap
 			Tree tr;
 			tr.Root.Scale.IncrementBy.nVal = OAI_MAJORTICKCOUNT;
 			tr.Root.Scale.MajorTicksCount.nVal = 10;
+			tr.Root.Labels.BottomLabels.DisplayAuto.nVal = 1;
 			if(bDate)
 			{
-				tr.Root.Labels.BottomLabels.DateFormat.nVal = LDF_AUTO;
+				tr.Root.Labels.BottomLabels.DateFormat.nVal = 0;
 				tr.Root.Labels.BottomLabels.DateCustomDisplay.strVal = "";
 			}
 			else
 			{
-				tr.Root.Labels.BottomLabels.TimeFormat.nVal = LTF_AUTO;
+				tr.Root.Labels.BottomLabels.TimeFormat.nVal = 0;
 				tr.Root.Labels.BottomLabels.TimeCustomDisplay.strVal = "";
 			}
 			
