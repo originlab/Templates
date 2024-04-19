@@ -1,0 +1,25 @@
+page.info.system.plotting.LT$=;
+
+strTemplate$=<[<
+if (%(%H,@Y#P,2) < 1) 
+{
+	type -b $general.singleYError;
+	return 0;
+}
+
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+int nrbegin = wks.r1;
+int nrend = wks.r2;
+range rry = (#, $(ncbegin):$(ncend))[$(nrbegin):$(nrend)];
+string bkname$ = page.name$;
+string shname$ = layer.name$;
+plotxy iy:=rry plot:=206 legend:=0 ogl:=[<new template:=__TEMPLATE>];
+plotxy iy:=rry  plot:=206 legend:=0 ogl:=2;
+layer -arxzm;
+layer2.x1.link.from$="X1+0.3";
+layer2.x2.link.to$="X2+0.3";
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
+
