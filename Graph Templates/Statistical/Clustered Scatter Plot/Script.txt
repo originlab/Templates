@@ -1,0 +1,5 @@
+%A = %;
+page.info.system.plotting.LT$="
+worksheet -p 194 __TEMPLATE;
+set %AC -z 6;
+";
