@@ -1,5 +1,8 @@
-%A = %;
-page.info.system.plotting.LT$="
-worksheet -p 194 __TEMPLATE;
-set %AC -z 6;
-";
+strTemplate$=<[<
+worksheet -p 247 __TEMPLATE;
+get %C -csed strgroup;
+set %C -cn %(strgroup$);
+layer.plot.subsetcol$ = strgroup$;
+layer -all ask;
+>]>;
+page.info.system.plotting.LT$=strTemplate$;
