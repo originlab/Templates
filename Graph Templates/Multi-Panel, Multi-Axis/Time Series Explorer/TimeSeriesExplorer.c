@@ -603,6 +603,7 @@ static bool _MoveSlider(const GraphLayer& gl, const GraphLayer* pgl2, const Grap
 		Tree tr;
 		tr.Root.Scale.IncrementBy.nVal = OAI_VALUE;
 		tr.Root.Scale.Value.dVal = dXInc;
+		tr.Root.Labels.BottomLabels.DisplayAuto.nVal = 0;
 		if(bDate)
 		{
 			if(nDateFormat != -1)
