@@ -1,7 +1,7 @@
 strTemplate$=<[<
 worksheet -p 247 __TEMPLATE;
 get %C -csed strgroup;
-set %C -cn %(strgroup$);
+set %C -ci;
 layer.plot.subsetcol$ = strgroup$;
 layer -all ask;
 >]>;
