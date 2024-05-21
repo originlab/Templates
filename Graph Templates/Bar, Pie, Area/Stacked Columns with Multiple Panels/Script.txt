@@ -1,0 +1,38 @@
+strTemplate$=<[<	
+int ncbegin = wks.c1;
+int ncend = wks.c2;
+if ((ncend-ncbegin) < 2 || (ncend-ncbegin)>3)
+{
+	type -b "Please select 3 or 4 columns in X|Y|Group|Color(optional) order to create the plot.";
+	return 0;
+}
+if ( (ncend-ncbegin)  == 2 ) 
+{
+         if (wks.nCols ==ncend)
+         {
+               wks.addcol();
+          }
+          if (wks.nCols >ncend)
+         {
+               wks.col = ncend+1;
+               wks.insert();
+          }
+          ncend=ncend+1;
+         csetvalue formula:="countif(%(ncbegin,@LS)[1:i],"%(ncbegin,@LS)==%(ncbegin,@LS)[i]$&&%(ncend-1,@LS)==%(ncend-1,@LS)[i]$")" col:=$(ncend);
+ }
+range rdata=$(ncbegin+1);
+range rgroup=($(ncbegin+2):$(ncend));	
+range rother=$(ncbegin);
+wunstackcol -r 2 irng1:=rdata irng2:=rgroup nonstack:=1 other:=rother pos:=custom custom:=P1P2;
+ plotbylabel iy:=(1,2:end) group:=P plottype:=column template:=__TEMPLATE rows:=1 hgap:=0;
+>]>;
+strTemplateAfter$=<[<	
+page.legendTranslationMode=8;
+page.cd.props=8;
+page.cd.props=10;
+run.section(Graph,Rescale);
+layer -aau (2);
+pfit2l direction:=height;
+>]>;
+page.info.system.plotting.LT$=strTemplate$;
+page.info.system.plotting.LTAfter$=strTemplateAfter$;
