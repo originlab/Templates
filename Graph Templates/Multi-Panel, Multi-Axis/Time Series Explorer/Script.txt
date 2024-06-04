@@ -1,5 +1,5 @@
 %A=%
-page.info.system.plotting.LTAfter$="string path=%A@Y;path.Delete(path.GetLength());int slash=path.ReverseFind('\');path$=path.Left(slash)$;page.active = 1;run.LoadOC(%A(path$)Templates\TimeSeriesExplorer.c, 16);run -oc {OriginRangeSliderInit();}"
+page.info.system.plotting.LTAfter$="string path=%A@Y;path.Delete(path.GetLength());int slash=0;int slashNext=1;string strSlash = "\";for( ; slashNext > 0; ){slashNext = path.Find(strSlash$, slash+1);if(slashNext > 0){slash = slashNext;}};path$=path.Left(slash)$;page.active = 1;run.LoadOC(%A(path$)Templates\TimeSeriesExplorer.c, 16);run -oc {OriginRangeSliderInit();}"
 
 //Run following command everytime before saving this template
 zoomrect.SETNUMERICVAR() 

@@ -1051,6 +1051,21 @@ void OriginRangeSliderInit()
     	dMode = ORS_ALL;
     }
     go.SetStorageNumericVar(ORS_MODE_NAME, dMode, FALSE);
+    GraphObject goRange = gl.GraphObjects(ORS_RANGE_NAME);
+	if(goRange)
+	{
+		string strRangeText;
+		if(dMode == ORS_ALL)
+		{
+			strRangeText.Format(s_strRangeFormat, STR_ALL);
+		}
+		else
+		{
+			strRangeText.Format(s_strRangeFormat, STR_CUSTOM);
+		}
+		goRange.Text = strRangeText;
+	}
+    
 	double dStart = 1.0;
 	go.SetStorageNumericVar(ORS_START_NAME, dStart, FALSE);
 	///------ Tony 01/17/2023 ORG-28342-S2 AXIS_INC_DEPENDS_ON_RANGE_MODE
