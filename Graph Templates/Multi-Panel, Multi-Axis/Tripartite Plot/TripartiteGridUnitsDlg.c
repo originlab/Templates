@@ -28,7 +28,12 @@
 #include <../Originlab/okThemeID.h>
 #include <../Originlab/grobj_utils.h>
 #include <..\Originlab\DialogEx.h>
+
 #define STR_TRIPAERTITE_GRID_UNIT_BUTTON					_L("Tripartite...")
+///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+#define STR_TRIPAERTITE_GRID_UNIT_BUTTON_NAME				_L("Tripartite")
+///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+
 #define MAKEDWORD(a, b)      ((LONG)(((WORD)(a)) | ((DWORD)((WORD)(b))) << 16))
 /**********************************************************************
 *                       TripartiteGridUnitsDlg                               *
@@ -163,11 +168,17 @@ static void _update_reference_line_value(TreeNode& trOneRefLine, string strFormu
 static void _update_x_y_axis_begin_and_end_Value(GraphLayer& gl, TreeNode &trTheme, TreeNode &trXRefLines, TreeNode &trYRefLines)
 {
 	trTheme = gl.GetFormat(FPB_ALL, FOB_AXIS_REFLINES, TRUE, TRUE);
-	trXRefLines = trTheme.Root.Axes.X.RefLines;
+	///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+	//trXRefLines = trTheme.Root.Axes.X.RefLines;
+	trXRefLines = trTheme.Root.Axes.X.DimRefLines.RefLines1;
+	///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 	trXRefLines.RefLines.RefLine1.Type.nVal = RefLineCtrl_Pos_Begin;
 	trXRefLines.RefLines.RefLine2.Type.nVal = RefLineCtrl_Pos_End;
 	
-	trYRefLines = trTheme.Root.Axes.Y.RefLines;
+	///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+	//trYRefLines = trTheme.Root.Axes.Y.RefLines;
+	trYRefLines = trTheme.Root.Axes.Y.DimRefLines.RefLines1;
+	///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 	trYRefLines.RefLines.RefLine1.Type.nVal = RefLineCtrl_Pos_Begin;
 	trYRefLines.RefLines.RefLine2.Type.nVal = RefLineCtrl_Pos_End;
 }
@@ -208,7 +219,9 @@ BOOL TripartiteGridUnitsDlg::OnClose()
 
 BOOL TripartiteGridUnitsDlg::OnDestroy()
 {
-	CreateButtonInTripartiteGraph(m_gl);
+	///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+	//CreateButtonInTripartiteGraph(m_gl);
+	///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 	return TRUE;
 }
 
@@ -462,8 +475,13 @@ BOOL UpdateReferenceLines(GraphLayer& gl, string strAValue, string strALabel, st
 		return false;
 	
 	TreeNode trTheme = gl.GetFormat(FPB_ALL, FOB_AXIS_REFLINES, TRUE, TRUE);
-	TreeNode trXRefLines = trTheme.Root.Axes.X.RefLines;
-	TreeNode trYRefLines = trTheme.Root.Axes.Y.RefLines;
+	
+	///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+	//TreeNode trXRefLines = trTheme.Root.Axes.X.RefLines;
+	//TreeNode trYRefLines = trTheme.Root.Axes.Y.RefLines;
+	TreeNode trXRefLines = trTheme.Root.Axes.X.DimRefLines.RefLines1;
+	TreeNode trYRefLines = trTheme.Root.Axes.Y.DimRefLines.RefLines1;
+	///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 	if(!trXRefLines.IsValid() || !trYRefLines.IsValid())
 		return false;
 		
@@ -587,28 +605,57 @@ BOOL UpdateReferenceLines(GraphLayer& gl, string strAValue, string strALabel, st
 	return bRet;
 }
 
-void CreateButtonInTripartiteGraph(GraphLayer& gl)
+///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+//void CreateButtonInTripartiteGraph(GraphLayer& gl)
+void CreateButtonInTripartiteGraph()
+///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 {
+	///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+	GraphLayer gl = Project.ActiveLayer();
+	if(!gl)
+		return;
+	///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 	GraphObject goTextButton = gl.GraphObjects(STR_TRIPAERTITE_GRID_UNIT_BUTTON);
 	if(goTextButton)
 	{
-		goTextButton.Text = STR_TRIPAERTITE_GRID_UNIT_BUTTON;
+		///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG	
+		//goTextButton.Text = STR_TRIPAERTITE_GRID_UNIT_BUTTON;
+		///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 	}
 	else
 	{
 		add_text(gl, goTextButton, 90, 5, STR_TRIPAERTITE_GRID_UNIT_BUTTON, 0, true, ATTACH_TO_PAGE);
-		goTextButton.SetName(STR_TRIPAERTITE_GRID_UNIT_BUTTON);
-		string strLT = "string path=%@Y;\
-						path.Delete(path.GetLength());\
-						int slash=path.ReverseFind('\');\
-						path$=path.Left(slash)$;\
-						page.active = 1;\
-						run.LoadOC(%(path$)Templates\TripartiteGridUnitsDlg.c, 16);\
+		///Martin 06/05/2024 ORG-24066-P3 BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
+		//goTextButton.SetName(STR_TRIPAERTITE_GRID_UNIT_BUTTON);
+		//string strLT = "string path=%@Y;\
+						//path.Delete(path.GetLength());\
+						//int slash=path.ReverseFind('\');\
+						//path$=path.Left(slash)$;\
+						//page.active = 1;\
+						//run.LoadOC(%(path$)Templates\TripartiteGridUnitsDlg.c, 16);\
+						//run -oc {OpenTripartiteGridUnitDLG();}";
+		goTextButton.SetName(STR_TRIPAERTITE_GRID_UNIT_BUTTON_NAME);
+		string strLT = "string path=%@Y;
+						path.Delete(path.GetLength());
+						int slash=0;
+						int slashNext=1;
+						string strSlash = \"\\\";
+						for( ; slashNext > 0; )
+						{
+							slashNext = path.Find(strSlash$, slash+1);
+							if(slashNext > 0)
+								slash = slashNext;
+						}
+						path$=path.Left(slash)$;
+						page.active = 1;
+						run.LoadOC(%(path$)Templates\TripartiteGridUnitsDlg.c, 16);
 						run -oc {OpenTripartiteGridUnitDLG();}";
+		///End BUTTON_FAIL_TO_WORK_IN_TRIPARTITE_GRID_UNITS_DLG
 		set_LT_script(goTextButton, strLT, GRCT_MOUSEUP);
 		set_textbutton_pos(gl, goTextButton, TRUE);
 	}
 }
+
 
 
 BOOL OpenTripartiteGridUnitDLG()
