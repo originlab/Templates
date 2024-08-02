@@ -1,12 +1,22 @@
 strTemplate$=<[<
 
-if (exist(%H)!=5)
+if (exist(%H)!=5 && exist(%H)!=29)
 {
-		type -b "Please activate a matrix book to create the graph";
+		type -b "Please activate a matrix book or an image window to create the graph";
 		return 0;
-}
+};
 
-worksheet -p 103  __TEMPLATE;
+if (exist(%H) == 5)
+{
+	worksheet -p 103  __TEMPLATE;
+
+};
+if (exist(%H) == 29)
+{
+	cv2plot ogl:=<new template:=  __TEMPLATE>;
+
+};
+
 >]>;
 
 page.info.system.plotting.LT$=strTemplate$;
