@@ -1,0 +1,16 @@
+strTemplate$=<[<
+	if( exist(%H,2) != 2 )
+	{
+		type -b "To create the graph, Please select at least one Y column"
+		return 0;
+	}
+	worksheet -P ? __TEMPLATE; 
+
+	run.LoadOC(Originlab\page_utils.c, 16);
+	run -oc OnAfterCreateStackedRadialPlot();
+	layer -b s 0;
+
+	legend -z;
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;

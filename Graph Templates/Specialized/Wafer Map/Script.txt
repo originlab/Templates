@@ -1,0 +1,30 @@
+strTemplate$=<[<
+if(exist(%H) != 5)
+{
+	type "Please select a matrix window to create the wafer map";
+	return;
+}
+
+string strWinName$ = page.name$;
+int nSrcIndex = page.active;
+mcopy -r 2 om:=WaferMap1>!<new>;
+wks.col1.X1=1;
+wks.col1.X2=10;
+wks.col1.Y1=1;
+wks.col1.Y2=10;
+
+worksheet -p 105 __TEMPLATE;
+
+create Func -pfunc  100 "t"
+"5*cos(t)+5.5""0""2*pi"
+"5*sin(t)+5.5""0""2*pi"
+""
+"" "" "" 
+"" "" "";
+legend.show=0;
+
+window -a %(strWinName$);
+page.active = nSrcIndex;
+>]>;
+
+page.info.system.plotting.LT$=strTemplate$;
