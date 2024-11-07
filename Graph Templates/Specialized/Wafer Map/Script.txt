@@ -23,8 +23,10 @@ create Func -pfunc  100 "t"
 "" "" "";
 legend.show=0;
 
+string ghplot$=page.name$;
 window -a %(strWinName$);
 page.active = nSrcIndex;
+win -a %(ghplot$);
 >]>;
 
 page.info.system.plotting.LT$=strTemplate$;
