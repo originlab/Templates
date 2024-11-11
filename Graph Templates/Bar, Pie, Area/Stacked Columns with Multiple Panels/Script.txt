@@ -20,11 +20,17 @@ if ( (ncend-ncbegin)  == 2 )
           ncend=ncend+1;
          csetvalue formula:="countif(%(ncbegin,@LS)[1:i],"%(ncbegin,@LS)==%(ncbegin,@LS)[i]$&&%(ncend-1,@LS)==%(ncend-1,@LS)[i]$")" col:=$(ncend);
  }
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
 range rdata=$(ncbegin+1);
 range rgroup=($(ncbegin+2):$(ncend));	
 range rother=$(ncbegin);
-wunstackcol -r 2 irng1:=rdata irng2:=rgroup nonstack:=1 other:=rother pos:=custom custom:=P1P2;
+wunstackcol -r 2 irng1:=rdata irng2:=rgroup nonstack:=1 other:=rother pos:=custom custom:=P1P2 ow:=PlotData>;
  plotbylabel iy:=(1,2:end) group:=P plottype:=column template:=__TEMPLATE rows:=1 hgap:=0;
+string ghplot$=page.name$;
+win -a %(bkname$);
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
 >]>;
 strTemplateAfter$=<[<	
 page.legendTranslationMode=8;
@@ -32,6 +38,7 @@ page.cd.props=8;
 page.cd.props=10;
 run.section(Graph,Rescale);
 layer -aau (2);
+xb.show=0;
 pfit2l direction:=height;
 >]>;
 page.info.system.plotting.LT$=strTemplate$;
