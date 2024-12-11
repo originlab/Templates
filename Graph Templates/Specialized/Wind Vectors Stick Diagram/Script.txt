@@ -1,21 +1,56 @@
 strTemplate$=<[<
-	int ncbegin = wks.c1;
-	int ncend = wks.c2;
-	if ((ncend-ncbegin) != 2)
+function string sellist()
+{
+	if( wks.iscolsel() < 2 || wks.iscolsel() > 3 )
+		return "error";
+	dataset dsX, dsY;
+	int nX = 0, nY = 0;
+	for(int jj = wks.c1;jj<=wks.c2;jj++)
 	{
-		type -b "To make this plot, please select XYY columns. The X column is the time series data, 1st Y represents the wind direction and 2nd Y represents the wind speed";
-		return 0;
+		if( wks.iscolsel($(jj)) && wks.col$(jj).type == 4 )
+		{
+			nX++;
+			dsX[nX] = jj;
+		}
+		else if( wks.iscolsel($(jj)) && wks.col$(jj).type == 1 )
+		{
+			nY++;
+			dsY[nY] = jj;
+		}
+	}	
+	if( nX == 1 && nY == 2 )
+		return "$(dsX[1])|$(dsY[1]), $(dsY[2])";
+	if( nX == 0 && nY == 2 )
+	{
+		range rTemp = $(dsY[1]);
+		int nnX = rTemp.findX();
+		return "$(nnX)|$(dsY[1]), $(dsY[2])";
 	}
-	range rrX = ($(ncbegin):$(ncbegin));
-	range rrdata = ($(ncbegin+1):$(ncend));
-	colcopy -r 2 irng:=rrX orng:=PlotData>!<new>;
-	string bkname$ = page.name$;
-	string shname$ = layer.name$;
-	wcol(2) = wcol(1);
-	wcol(2) = 0;
-	colcopy -r 2 irng:=rrdata orng:=[bkname$]shname$!<new>;
-	worksheet -s 0 0;
-	worksheet -p 208 vector;
+	return "error";
+}
+string strResult$ = sellist()$;
+if( strResult$ == "error" )
+{
+	type -b "To make this plot, please select XYY columns. The X column is the time series data, 1st Y represents the wind direction in degrees and 2nd Y represents the wind speed";
+	return;
+}
+string strX$ = token(strResult$, 1, "|")$;
+string strY$ = token(strResult$, 2, "|")$;
+range rrX = %(strX$);
+range rrdata = %(strY$);
+string bkname$ = page.name$;
+string shdata$ = layer.name$;
+colcopy -r 1 irng:=rrX orng:=<new name:=PlotData>!<new>;
+string shname$ = layer.name$;
+wcol(2) = wcol(1);
+wcol(2) = 0;
+colcopy -r 1 irng:=rrdata orng:=[bkname$]shname$!<new>;
+worksheet -s 0 0;
+worksheet -p 208 __TEMPLATE;
+string ghplot$=page.name$;
+win -a %(bkname$);
+page.active$ = %(shdata$); 
+win -a %(ghplot$);
 >]>;
 
 page.info.system.plotting.LT$=strTemplate$;
