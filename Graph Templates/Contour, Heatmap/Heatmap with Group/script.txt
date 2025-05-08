@@ -1,0 +1,38 @@
+strHeatmapgroup$=<[<	
+if (wks.ncols<3)
+{
+	type -b "Please select a worksheet with heatmap data.  The first column contains the X labels, the second column includes the X grouping information, the Y labels are in the "Long Name" label row, and the Y grouping information are in the "Comments" label row.";
+}
+
+loop(ii,3, wks.ncols)
+	{
+		if (IsEmpty(wcol(ii)[C]$))
+		{
+			type -b "Please put the Y grouping info. in the Comments label row of Y columns";
+			return;
+		}
+	}
+
+loop(ii,3, wks.ncols)
+	{
+		if ((IsEmpty(wcol(ii)[L]$)
+		{
+			type -b "Please put the Y Labels. in the Long Name label row of Y columns";
+			return;
+		}
+	}
+
+
+
+range rGroup = 2;
+range rData = (3:0);
+
+	plotvm irng:=rData format:=xacross rowpos:=label label:="Long Name" colpos:=wkscol1 coltype:=<optional> type:=105 ogl:=<new template:=__TEMPLATE>;
+
+
+layer.plot1.ygapparam$=%(rGroup);
+
+>]>;
+
+page.info.system.plotting.LT$=strHeatmapgroup$;
+
