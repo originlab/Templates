@@ -1,24 +1,25 @@
-strTemplate$=<[<
-
 int ncbegin = wks.c1;
 int ncend = wks.c2;
-if (wks.iscolsel()!=2)
+//if (wks.iscolsel()!=2)
+//{
+//	type -b "Please select 2 columns in Group|Y order to create the plot.";
+//	return 0;
+//}
+if (wks.iscolsel()<2)
 {
-	type -b "Please select 2 columns in Group|Y order to create the plot.";
+	type -b "Please select at least 2 columns in Group|Y order to create the plot.";
 	return 0;
 }
-
 string bkname$ = page.name$;
 string shdata$ = layer.name$;
 range rgroup=$(ncbegin);
-range rdata=$(ncend);	
-wunstackcol -r 2 irng1:=rdata irng2:=rgroup pos:=udl label:=L ow:=PlotData>;
-worksheet -s 0 0 0 0;
-worksheet -P 206 __TEMPLATE;
-string ghplot$=page.name$;
-win -a %(bkname$);
-page.active$ = %(shdata$); 
-win -a %(ghplot$);
->]>;
-
-page.info.system.plotting.LT$=strTemplate$;
+range rdata=($(ncbegin+1):$(ncend));
+//range rdata=$(ncend);	
+//wunstackcol -r 2 irng1:=rdata irng2:=rgroup pos:=udl label:=L ow:=PlotData>;
+//worksheet -s 0 0 0 0;
+//worksheet -P 206 __TEMPLATE;
+plot_gboxindexed -r 1 irng:=rdata group:=rgroup muldata:=pages template:=__TEMPLATE increment:=between info:=<[<\P85(N=%(?, @F"count(this,3)"))>]>;
+//string ghplot$=page.name$;
+//win -a %(bkname$);
+//page.active$ = %(shdata$); 
+//win -a %(ghplot$);
